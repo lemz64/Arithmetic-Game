@@ -1,0 +1,218 @@
+import random
+
+def settings():
+  #subroutine to change settings of the game
+  global mMax
+  global dMax
+  global aMax
+  global sMax
+  global intDiv
+  global highScore
+  print("\n")
+  print("You currently have: \n\nHigh Score:",highScore,"\nMultiplication Maximum: ",mMax,"\nDivision Maximum: ",dMax,"\nAddition Maximum: ",aMax," \nSubtraction Maximum: ",sMax, "\nInteger Division: ",intDiv, " (round to 2dp if On)")
+  change=input('Would you like to change your settings? (Y/N): ')
+  while change.lower()=="y":
+    print("\n")
+    mMax = int(input("What would you like the multiplication maximum to be? "))
+    dMax = int(input("What would you like the division maximum to be? "))
+    aMax = int(input("What would you like the addition maximum to be? "))
+    sMax = int(input("What would you like the subtraction maximum to be? "))
+    intDiv = input("Would you like integer division to be enabled? (Y/N): ")
+    if intDiv.lower()=="y":
+      intDiv="On"
+    else:
+      intDiv="Off"
+    print("\n")
+    change=input('Are you happy with these settings? (Y/N): ')
+    if change.lower()=="y":
+      change='n'
+    else:
+      change='y'
+  return mMax, dMax, aMax, sMax, intDiv
+
+
+def game():
+  #subroutine to run the game
+  global score
+  global L
+  global correct
+  global intDiv
+  global mMax
+  global dMax
+  global aMax
+  global sMax
+  global userValue
+  select=random.randint(0,3)
+  score=0
+  while L==False and intDiv=='Off':
+    select=random.randint(0,3)
+    if Qtype[select]=="multiplication":
+      a=random.randint(1,mMax)
+      b=random.randint(1,mMax)
+      userValue=int(input("What is "+str(a)+" x "+str(b)+": "))
+      correct = multiplication(a,b)
+      if userValue==correct:
+        score=score+1
+      else:
+        L=True
+        lose()
+    if Qtype[select]=="division":
+      a=random.randint(1,dMax)
+      b=random.randint(1,dMax)
+      userValue=float(input("What is "+str(a)+" ÷ "+str(b)+": "))
+      correct = division(a,b)
+      if userValue==correct:
+        score=score+1
+      else:
+        L=True
+        lose()
+    if Qtype[select]=="addition":
+      a=random.randint(1,aMax)
+      b=random.randint(1,aMax)
+      userValue=int(input("What is "+str(a)+" + "+str(b)+": "))
+      correct = addition(a,b)
+      if userValue==correct:
+        score=score+1
+      else:
+        L=True
+        lose()
+    if Qtype[select]=="subtraction":
+      a=random.randint(1,sMax)
+      b=random.randint(1,sMax)
+      userValue=int(input("What is "+str(a)+" - "+str(b)+": "))
+      correct = subtraction(a,b)
+      if userValue==correct:
+        score=score+1
+      else:
+        L=True
+        lose()
+
+  while L==False and intDiv=='On':
+    select=random.randint(0,3)
+    if Qtype[select]=="multiplication":
+      a=random.randint(1,mMax)
+      b=random.randint(1,mMax)
+      userValue=int(input("What is "+str(a)+" x "+str(b)+": "))
+      correct = multiplication(a,b)
+      if userValue==correct:
+        score=score+1
+      else:
+        L=True
+        lose()
+    if Qtype[select]=="division":
+      a=random.randint(1,dMax)
+      b=random.randint(1,dMax)
+      correct = intdivision(a,b)
+      if userValue==correct:
+        score=score+1
+      else:
+        L=True
+        lose()
+    if Qtype[select]=="addition":
+      a=random.randint(1,aMax)
+      b=random.randint(1,aMax)
+      userValue=int(input("What is "+str(a)+" + "+str(b)+": "))
+      correct = addition(a,b)
+      if userValue==correct:
+        score=score+1
+      else:
+        L=True
+        lose()
+    if Qtype[select]=="subtraction":
+      a=random.randint(1,sMax)
+      b=random.randint(1,sMax)
+      userValue=int(input("What is "+str(a)+" - "+str(b)+": "))
+      correct = subtraction(a,b)
+      if userValue==correct:
+        score=score+1
+      else:
+        L=True
+        lose()
+
+def addition(a,b):
+  #subroutine for addition
+  ans=a+b
+  return ans
+  
+def subtraction(a,b):
+  #subroutine for subtraction
+  ans=a-b
+  return ans
+
+def multiplication(a,b):
+  #subroutine for multiplication
+  ans=a*b
+  return ans
+
+def division(a,b):
+  #subroutine for division
+  ans=a/b
+  ans=round(ans,2)
+  return ans
+  
+def intdivision(a,b):
+  #subroutine for strictly integer division
+  global userValue
+  global dMax
+  while a%b!=0:
+    a=random.randint(1,dMax)
+    b=random.randint(1,dMax)
+  userValue=int(input("What is "+str(a)+" ÷ "+str(b)+": "))
+  ans=a/b
+  return ans
+
+def lose():
+  global num
+  global score
+  global highScore
+  global correct
+  global L
+  print('Unfortunately that answer is incorrect. The correct answer was',correct)
+  if score > highScore:
+    print("\n\nWell Done!!! You reached a new high score of: " +str(score))
+    highScore=score
+  else:
+    print('\n\nYour final score is', score)
+  replay=input('Would you like to play again (Y/N): ')
+  if replay.lower()=="n":
+    quit()
+  else:
+    L=False
+    menu()
+
+def menu():
+  #menu replay
+  num=int(input('\n1. Start \n2. End \n3. Settings \nChoice: '))
+  if num==2:
+    quit()
+  if num==1:
+    print("\n")
+    game()
+  elif num==3:
+    settings()
+    menu()
+
+
+#main
+mMax=15
+dMax=15
+aMax=100
+sMax=100
+intDiv='Off'
+num=0
+L=False
+userValue=0
+score=0
+highScore=0
+Qtype=["multiplication","division","addition","subtraction"]
+
+#menu
+num=int(input('\n1. Start \n2. End \n3. Settings \nChoice: '))
+if num==2:
+  quit()
+if num==1:
+  print("\n")
+  game()
+elif num==3:
+  settings()
+  menu()
